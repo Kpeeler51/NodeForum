@@ -1,21 +1,51 @@
-import './App.css'
-import {BrowserRouter, Route, Routes } from 'react-router';
-import Home from './Components/Home/Home'
-import Navbar from './Components/Navbar/Navbar'
+import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router';
+import Home from './Components/Home/Home';
+import Navbar from './Components/Navbar/Navbar';
+import Login from './Components/Login/Login';
+import Register from './Components/Register/Register';
 
-function App() {
+const App = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  const handleLogin = (token) => {
+    localStorage.setItem('token', token);
+    setIsAuthenticated(true);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setIsAuthenticated(false);
+  };
 
   return (
-    <div>
-      <Navbar/>
-      <BrowserRouter>
+    <Router>
+      <div>
+        <Navbar 
+          isAuthenticated={isAuthenticated} 
+          onLogout={handleLogout} 
+        />
         <Routes>
-          <Route exact path="/" element={<Home />} />
+          <Route path="/" element={<Home isAuthenticated={isAuthenticated} />} />
+          <Route 
+            path="/login" 
+            element={<Login onLogin={handleLogin} isAuthenticated={isAuthenticated} />} 
+          />
+          <Route 
+            path="/register" 
+            element={<Register onLogin={handleLogin} isAuthenticated={isAuthenticated} />} 
+          />
         </Routes>
-      </BrowserRouter>
-      
-    </div>
-  )
-}
+      </div>
+    </Router>
+  );
+};
 
-export default App
+export default App;
