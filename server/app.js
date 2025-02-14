@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import userRoutes from './routes/users.js';
+import threadRoutes from './routes/threads.js';
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ const connectDB = async () => {
 };
 
 app.use('/api/users', userRoutes);
+app.use('/api/threads', threadRoutes);
 
 const startServer = async () => {
     try {

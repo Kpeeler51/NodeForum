@@ -4,6 +4,8 @@ import Home from './Components/Home/Home';
 import Navbar from './Components/Navbar/Navbar';
 import Login from './Components/Login/Login';
 import Register from './Components/Register/Register';
+import ThreadDetail from './Components/ThreadDetail/ThreadDetail';
+import CreateThread from './Components/CreateThread/CreateThread';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -42,6 +44,8 @@ const App = () => {
             path="/register" 
             element={<Register onLogin={handleLogin} isAuthenticated={isAuthenticated} />} 
           />
+          <Route path="/thread/:id" element={<ThreadDetail />} />
+          <Route path="/create-thread" element={<CreateThread />} />
         </Routes>
       </div>
     </Router>
