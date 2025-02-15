@@ -11,17 +11,35 @@ const Register = ({ onLogin, isAuthenticated }) => {
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            await register(username, email, password);
-            const loginData = await login(email, password);
-            onLogin(loginData.token);
-            navigate('/');
-        } catch (err) {
-            console.error('Registration error:', err);
-            setError(err.message || 'Registration failed. Please try again.');
+    e.preventDefault();
+    try {
+        await register(username, email, password);
+        const loginData = await login(email, password);
+        onLogin(loginData.token);
+        navigate('/');
+    } catch (err) {
+        console.error('Registration error:', err);
+        console.log('Error response:', err.response);
+        
+        if (err.response && err.response.data) {
+            console.log('Error data:', err.response.data);
+            
+            if (err.response.data.field === 'username') {
+                setError('Username already exists. Please choose a different username.');
+            } else if (err.response.data.field === 'email') {
+                setError('Email already taken. Please use a different email address.');
+            } else if (err.response.data.message) {
+                setError(err.response.data.message);
+            } else {
+                setError('Registration failed. Please try again.');
+            }
+        } else if (err.message) {
+            setError(err.message);
+        } else {
+            setError('An unexpected error occurred. Please try again.');
         }
-    };
+    }
+};
 
     if (isAuthenticated) {
         navigate('/');
