@@ -23,8 +23,15 @@ const Login = ({ onLogin, isAuthenticated }) => {
     
             if (data && data.token) {
                 localStorage.setItem('token', data.token);
+                localStorage.setItem('userInfo', JSON.stringify({
+                    userId: data.userId,
+                    username: data.username
+                }));
                 console.log('Token set in localStorage:', data.token);
-                onLogin(data.token);
+                onLogin(data.token, {
+                    userId: data.userId,
+                    username: data.username
+                });
                 navigate('/');
             } else {
                 console.error('No token received in login response');

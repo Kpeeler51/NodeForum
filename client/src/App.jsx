@@ -9,22 +9,29 @@ import CreateThread from './Components/CreateThread/CreateThread';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (token) {
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    if (token && userInfo) {
       setIsAuthenticated(true);
+      setCurrentUser(userInfo);
     }
   }, []);
 
-  const handleLogin = (token) => {
+  const handleLogin = (token, userInfo) => {
     localStorage.setItem('token', token);
+    localStorage.setItem('userInfo', JSON.stringify(userInfo));
     setIsAuthenticated(true);
+    setCurrentUser(userInfo);
   };
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('userInfo');
     setIsAuthenticated(false);
+    setCurrentUser(null);
   };
 
   return (
@@ -44,7 +51,10 @@ const App = () => {
             path="/register" 
             element={<Register onLogin={handleLogin} isAuthenticated={isAuthenticated} />} 
           />
-          <Route path="/thread/:id" element={<ThreadDetail />} />
+          <Route 
+            path="/thread/:id" 
+            element={<ThreadDetail currentUser={currentUser} />} 
+          />
           <Route path="/create-thread" element={<CreateThread />} />
         </Routes>
       </div>

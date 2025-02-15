@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useParams } from 'react-router';
+import { useParams, useNavigate } from 'react-router';
 
 const ThreadDetail = () => {
   const [thread, setThread] = useState(null);
@@ -8,6 +8,8 @@ const ThreadDetail = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const { id } = useParams();
+  const [currentUser, setCurrentUser] = useState(null);
+  const navigate = useNavigate();
 
   const fetchThreadDetails = useCallback(async () => {
     setIsLoading(true);
@@ -30,6 +32,8 @@ const ThreadDetail = () => {
 
   useEffect(() => {
     fetchThreadDetails();
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    setCurrentUser(userInfo);
   }, [fetchThreadDetails]);
 
   const handleReplySubmit = async (e) => {
@@ -55,6 +59,48 @@ const ThreadDetail = () => {
     }
   };
 
+  const handleDeleteThread = async () => {
+    if (!window.confirm('Are you sure you want to delete this thread?')) return;
+
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/threads/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to delete thread');
+      }
+      navigate('/');
+    } catch (error) {
+      console.error('Error deleting thread:', error);
+      setError('Failed to delete thread. Please try again.');
+    }
+  };
+
+  const handleDeleteReply = async (replyId) => {
+    if (!window.confirm('Are you sure you want to delete this reply?')) return;
+
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/threads/replies/${replyId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to delete reply');
+      }
+      fetchThreadDetails();
+    } catch (error) {
+      console.error('Error deleting reply:', error);
+      setError('Failed to delete reply. Please try again.');
+    }
+  };
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -73,6 +119,9 @@ const ThreadDetail = () => {
       <p>{thread.description}</p>
       <p>Category: {thread.category}</p>
       <p>Author: {thread.author.username}</p>
+      {currentUser && currentUser.userId === thread.author._id && (
+        <button onClick={handleDeleteThread}>Delete Thread</button>
+      )}
 
       <h3>Replies</h3>
       {replies.length === 0 ? (
@@ -82,6 +131,9 @@ const ThreadDetail = () => {
           <div key={reply._id} className="reply-item">
             <p>{reply.content}</p>
             <p>By: {reply.author.username}</p>
+            {currentUser && currentUser.userId === reply.author._id && (
+              <button onClick={() => handleDeleteReply(reply._id)}>Delete Reply</button>
+            )}
           </div>
         ))
       )}
