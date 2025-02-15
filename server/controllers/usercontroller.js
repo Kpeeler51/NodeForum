@@ -2,21 +2,34 @@ import User from '../models/user.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
+const validatePassword = (password) => {
+  if (password.length < 8) {
+    return "Password must be at least 8 characters long.";
+  }
+  if (!/[A-Z]/.test(password)) {
+    return "Password must contain at least one uppercase letter.";
+  }
+  return null;
+};
+
 export const register = async (req, res) => {
   console.log('Register attempt:', req.body);
   try {
     const { username, email, password } = req.body;
     
-    // Check if username already exists
     const existingUsername = await User.findOne({ username });
     if (existingUsername) {
       return res.status(400).json({ message: 'Username already exists', field: 'username' });
     }
 
-    // Check if email already exists
     const existingEmail = await User.findOne({ email });
     if (existingEmail) {
       return res.status(400).json({ message: 'Email already taken', field: 'email' });
+    }
+
+    const passwordError = validatePassword(password);
+    if (passwordError) {
+      return res.status(400).json({ message: passwordError, field: 'password' });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);

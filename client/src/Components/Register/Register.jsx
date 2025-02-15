@@ -11,35 +11,52 @@ const Register = ({ onLogin, isAuthenticated }) => {
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-        await register(username, email, password);
-        const loginData = await login(email, password);
-        onLogin(loginData.token);
-        navigate('/');
-    } catch (err) {
-        console.error('Registration error:', err);
-        console.log('Error response:', err.response);
+        e.preventDefault();
         
-        if (err.response && err.response.data) {
-            console.log('Error data:', err.response.data);
-            
-            if (err.response.data.field === 'username') {
-                setError('Username already exists. Please choose a different username.');
-            } else if (err.response.data.field === 'email') {
-                setError('Email already taken. Please use a different email address.');
-            } else if (err.response.data.message) {
-                setError(err.response.data.message);
-            } else {
-                setError('Registration failed. Please try again.');
-            }
-        } else if (err.message) {
-            setError(err.message);
-        } else {
-            setError('An unexpected error occurred. Please try again.');
+        const passwordError = validatePassword(password);
+        if (passwordError) {
+            setError(passwordError);
+            return;
         }
-    }
-};
+    
+        try {
+            await register(username, email, password);
+            const loginData = await login(email, password);
+            onLogin(loginData.token);
+            navigate('/');
+        } catch (err) {
+            console.error('Registration error:', err);
+            console.log('Error response:', err.response);
+            
+            if (err.response && err.response.data) {
+                console.log('Error data:', err.response.data);
+                
+                if (err.response.data.field === 'username') {
+                    setError('Username already exists. Please choose a different username.');
+                } else if (err.response.data.field === 'email') {
+                    setError('Email already taken. Please use a different email address.');
+                } else if (err.response.data.message) {
+                    setError(err.response.data.message);
+                } else {
+                    setError('Registration failed. Please try again.');
+                }
+            } else if (err.message) {
+                setError(err.message);
+            } else {
+                setError('An unexpected error occurred. Please try again.');
+            }
+        }
+    };
+
+    const validatePassword = (password) => {
+        if (password.length < 8) {
+            return "Password must be at least 8 characters long.";
+        }
+        if (!/[A-Z]/.test(password)) {
+            return "Password must contain at least one uppercase letter.";
+        }
+        return null;
+    };
 
     if (isAuthenticated) {
         navigate('/');
@@ -77,6 +94,9 @@ const Register = ({ onLogin, isAuthenticated }) => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
+                <p className="password-requirements">
+                    Password must be at least 8 characters long and contain at least one uppercase letter.
+                </p>
                 {error && <p className="error">{error}</p>}
                 <button className='registerbutton' type='submit'>Register</button>
                 <p>
