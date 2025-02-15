@@ -1,10 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router';
+import ReplyModal from '../ReplyModal/ReplyModal';
 
 const ThreadDetail = () => {
   const [thread, setThread] = useState(null);
   const [replies, setReplies] = useState([]);
   const [newReply, setNewReply] = useState('');
+  const [isReplyModalOpen, setIsReplyModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const { id } = useParams();
@@ -52,6 +54,7 @@ const ThreadDetail = () => {
         throw new Error('Failed to submit reply');
       }
       setNewReply('');
+      setIsReplyModalOpen(false);
       fetchThreadDetails();
     } catch (error) {
       console.error('Error submitting reply:', error);
@@ -123,7 +126,7 @@ const ThreadDetail = () => {
         <button onClick={handleDeleteThread}>Delete Thread</button>
       )}
 
-      <h3>Replies</h3>
+<h3>Replies</h3>
       {replies.length === 0 ? (
         <p>No replies yet.</p>
       ) : (
@@ -138,15 +141,15 @@ const ThreadDetail = () => {
         ))
       )}
 
-      <form onSubmit={handleReplySubmit}>
-        <textarea
-          value={newReply}
-          onChange={(e) => setNewReply(e.target.value)}
-          placeholder="Write your reply..."
-          required
-        />
-        <button type="submit">Submit Reply</button>
-      </form>
+      <button onClick={() => setIsReplyModalOpen(true)}>Add Reply</button>
+
+      <ReplyModal
+        isOpen={isReplyModalOpen}
+        onClose={() => setIsReplyModalOpen(false)}
+        newReply={newReply}
+        setNewReply={setNewReply}
+        onSubmit={handleReplySubmit}
+      />
     </div>
   );
 };
