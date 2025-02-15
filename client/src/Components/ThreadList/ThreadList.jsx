@@ -25,6 +25,11 @@ const ThreadList = ({ selectedCategory }) => {
     fetchThreads();
   }, [fetchThreads]);
 
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
   return (
     <div className="thread-list">
       <h2>Threads</h2>
@@ -35,6 +40,10 @@ const ThreadList = ({ selectedCategory }) => {
           </Link>
           <p>Category: {thread.category.name}</p>
           <p>Author: {thread.author.username}</p>
+          <p>Created: {formatDate(thread.createdAt)}</p>
+          {thread.latestReplyDate && (
+            <p>Latest Reply: {formatDate(thread.latestReplyDate)}</p>
+          )}
         </div>
       ))}
     </div>

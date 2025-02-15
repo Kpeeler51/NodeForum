@@ -24,6 +24,16 @@ const ThreadDetail = () => {
       const data = await response.json();
       setThread(data.thread);
       setReplies(data.replies);
+
+      if (data.replies.length > 0) {
+        const latestReply = data.replies.reduce((latest, reply) => 
+          new Date(reply.createdAt) > new Date(latest.createdAt) ? reply : latest
+        );
+        setThread(prevThread => ({
+          ...prevThread,
+          latestReplyDate: latestReply.createdAt
+        }));
+      }
     } catch (error) {
       console.error('Error fetching thread details:', error);
       setError('Failed to load thread details. Please try again later.');
@@ -31,6 +41,11 @@ const ThreadDetail = () => {
       setIsLoading(false);
     }
   }, [id]);
+
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
 
   useEffect(() => {
     fetchThreadDetails();
@@ -122,11 +137,15 @@ const ThreadDetail = () => {
       <p>{thread.description}</p>
       <p>Category: {thread.category.name || 'Uncategorized'}</p>
       <p>Author: {thread.author.username}</p>
+      <p>Created: {formatDate(thread.createdAt)}</p>
+      {thread.latestReplyDate && (
+        <p>Latest Reply: {formatDate(thread.latestReplyDate)}</p>
+      )}
       {currentUser && currentUser.userId === thread.author._id && (
         <button onClick={handleDeleteThread}>Delete Thread</button>
       )}
-
-<h3>Replies</h3>
+  
+      <h3>Replies</h3>
       {replies.length === 0 ? (
         <p>No replies yet.</p>
       ) : (
@@ -134,15 +153,16 @@ const ThreadDetail = () => {
           <div key={reply._id} className="reply-item">
             <p>{reply.content}</p>
             <p>By: {reply.author.username}</p>
+            <p>Created: {formatDate(reply.createdAt)}</p>
             {currentUser && currentUser.userId === reply.author._id && (
               <button onClick={() => handleDeleteReply(reply._id)}>Delete Reply</button>
             )}
           </div>
         ))
       )}
-
+  
       <button onClick={() => setIsReplyModalOpen(true)}>Add Reply</button>
-
+  
       <ReplyModal
         isOpen={isReplyModalOpen}
         onClose={() => setIsReplyModalOpen(false)}
