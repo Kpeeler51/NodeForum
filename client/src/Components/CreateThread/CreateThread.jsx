@@ -4,10 +4,11 @@ import PropTypes from 'prop-types';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
-const CreateThread = ({ onClose }) => {
+const CreateThread = ({ onClose, categories, onThreadCreated }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
+  const [newCategory, setNewCategory] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -16,13 +17,34 @@ const CreateThread = ({ onClose }) => {
     setError('');
     try {
       const token = localStorage.getItem('token');
+      let categoryId = category;
+  
+      // If "Create new category" is selected and a new category name is provided
+      if (category === 'new' && newCategory.trim()) {
+        const categoryResponse = await fetch(`${API_BASE_URL}/api/categories`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify({ name: newCategory.trim() }),
+        });
+  
+        if (!categoryResponse.ok) {
+          throw new Error('Failed to create or fetch category');
+        }
+  
+        const categoryData = await categoryResponse.json();
+        categoryId = categoryData.category._id;
+      }
+  
       const response = await fetch(`${API_BASE_URL}/api/threads`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ title, description, category }),
+        body: JSON.stringify({ title, description, category: categoryId }),
       });
       
       const data = await response.json();
@@ -32,6 +54,7 @@ const CreateThread = ({ onClose }) => {
       }
       
       onClose();
+      onThreadCreated();
       navigate(`/thread/${data._id}`);
     } catch (error) {
       console.error('Error creating thread:', error);
@@ -58,13 +81,28 @@ const CreateThread = ({ onClose }) => {
             placeholder="Thread Description"
             required
           />
-          <input
-            type="text"
+          <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            placeholder="Category"
             required
-          />
+          >
+            <option value="">Select a category</option>
+            {categories.map((cat) => (
+              <option key={cat._id} value={cat._id}>
+                {cat.name}
+              </option>
+            ))}
+            <option value="new">Create new category</option>
+          </select>
+          {category === 'new' && (
+            <input
+              type="text"
+              value={newCategory}
+              onChange={(e) => setNewCategory(e.target.value)}
+              placeholder="New Category Name"
+              required
+            />
+          )}
           <div className="button-group">
             <button type="submit">Create Thread</button>
             <button type="button" onClick={onClose}>Cancel</button>
@@ -77,6 +115,8 @@ const CreateThread = ({ onClose }) => {
 
 CreateThread.propTypes = {
   onClose: PropTypes.func.isRequired,
+  categories: PropTypes.array.isRequired,
+  onThreadCreated: PropTypes.func.isRequired,
 };
 
 export default CreateThread;

@@ -117,7 +117,7 @@ const ThreadDetail = () => {
     <div className="thread-detail">
       <h2>{thread.title}</h2>
       <p>{thread.description}</p>
-      <p>Category: {thread.category}</p>
+      <p>Category: {thread.category.name || 'Uncategorized'}</p>
       <p>Author: {thread.author.username}</p>
       {currentUser && currentUser.userId === thread.author._id && (
         <button onClick={handleDeleteThread}>Delete Thread</button>

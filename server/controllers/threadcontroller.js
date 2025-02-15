@@ -19,7 +19,12 @@ export const createThread = async (req, res) => {
 
 export const getThreads = async (req, res) => {
   try {
-    const threads = await Thread.find().populate('author', 'username');
+    const { category } = req.query;
+    let query = {};
+    if (category) {
+      query.category = category;
+    }
+    const threads = await Thread.find(query).populate('author', 'username').populate('category', 'name');
     res.json(threads);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching threads', error: error.message });
@@ -28,7 +33,9 @@ export const getThreads = async (req, res) => {
 
 export const getThread = async (req, res) => {
   try {
-    const thread = await Thread.findById(req.params.id).populate('author', 'username');
+    const thread = await Thread.findById(req.params.id)
+    .populate('author', 'username')
+    .populate('category', 'name');
     if (!thread) {
       return res.status(404).json({ message: 'Thread not found' });
     }
