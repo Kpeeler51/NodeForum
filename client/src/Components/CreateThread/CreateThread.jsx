@@ -19,7 +19,6 @@ const CreateThread = ({ onClose, categories, onThreadCreated }) => {
       const token = localStorage.getItem('token');
       let categoryId = category;
   
-      // If "Create new category" is selected and a new category name is provided
       if (category === 'new' && newCategory.trim()) {
         const categoryResponse = await fetch(`${API_BASE_URL}/api/categories`, {
           method: 'POST',

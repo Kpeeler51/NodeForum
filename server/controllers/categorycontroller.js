@@ -13,15 +13,12 @@ export const createCategory = async (req, res) => {
     try {
       const { name } = req.body;
   
-      // Check if the category already exists
       let category = await Category.findOne({ name: { $regex: new RegExp(`^${name}$`, 'i') } });
   
       if (category) {
-        // If category exists, return it
         return res.status(200).json({ message: 'Category already exists', category });
       }
   
-      // If category doesn't exist, create a new one
       category = new Category({ name });
       await category.save();
   
