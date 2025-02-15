@@ -13,7 +13,7 @@ const App = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    const userInfo = localStorage.getItem('userInfo');
     if (token && userInfo) {
       setIsAuthenticated(true);
       setCurrentUser(userInfo);

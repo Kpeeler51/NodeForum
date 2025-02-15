@@ -49,7 +49,7 @@ const ThreadDetail = () => {
 
   useEffect(() => {
     fetchThreadDetails();
-    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    const userInfo = localStorage.getItem('userInfo');
     setCurrentUser(userInfo);
   }, [fetchThreadDetails]);
 
