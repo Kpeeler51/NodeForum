@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import PropTypes from 'prop-types';
-import './CreateThread.css';
 import storage from '../../utils/storage';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
