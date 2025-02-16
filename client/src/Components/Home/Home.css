@@ -1,0 +1,23 @@
+.home {
+    display: flex;
+    flex-direction: column;
+    height: 95.7vh;
+  }
+  
+  .home-content {
+    display: flex;
+    overflow: hidden;
+  }
+  
+  .category-list-container {
+    width: 250px;
+    overflow-y: auto;
+    padding: 1rem;
+    border-right: 1px solid #dee3ed;
+  }
+  
+  .thread-list-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+  }

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import ThreadList from '../ThreadList/ThreadList';
 import CreateThread from '../CreateThread/CreateThread';
 import CategoryList from '../CategoryList/CategoryList';
+import './Home.css';
 
 const Home = ({ isAuthenticated }) => {
   const [isCreateThreadModalOpen, setIsCreateThreadModalOpen] = useState(false);
@@ -32,12 +33,18 @@ const Home = ({ isAuthenticated }) => {
       {isAuthenticated && (
         <button onClick={() => setIsCreateThreadModalOpen(true)}>Create New Thread</button>
       )}
-      <CategoryList 
-        categories={categories} 
-        selectedCategory={selectedCategory} 
-        onSelectCategory={setSelectedCategory} 
-      />
-      <ThreadList selectedCategory={selectedCategory} />
+      <div className="home-content">
+        <div className="category-list-container">
+          <CategoryList 
+            categories={categories} 
+            selectedCategory={selectedCategory} 
+            onSelectCategory={setSelectedCategory} 
+          />
+        </div>
+        <div className="thread-list-container">
+          <ThreadList selectedCategory={selectedCategory} />
+        </div>
+      </div>
       {isCreateThreadModalOpen && (
         <CreateThread 
           onClose={() => setIsCreateThreadModalOpen(false)} 
