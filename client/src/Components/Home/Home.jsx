@@ -28,7 +28,7 @@ const Home = ({ isAuthenticated }) => {
   };
 
   return (
-    <div className="home">
+    <main className="home">
       <h1>Welcome to the Forum</h1>
       {isAuthenticated && (
         <button onClick={() => setIsCreateThreadModalOpen(true)}>Create New Thread</button>
@@ -52,7 +52,7 @@ const Home = ({ isAuthenticated }) => {
           onThreadCreated={fetchCategories}
         />
       )}
-    </div>
+    </main>
   );
 };
 
