@@ -1,14 +1,17 @@
 import { Link } from 'react-router';
 import PropTypes from 'prop-types';
+import './Navbar.css';
 
 const Nav = ({ isAuthenticated, onLogout }) => {
     return (
         <nav className='navbar'>
             <div className='navbar-left'>
                 <h2>NodeForum</h2>
-                <Link to="/">Home</Link>
             </div>
             <div className='navbar-right'>
+            <Link to="/">
+            <button>Home</button>
+            </Link>
                 {isAuthenticated ? (
                     <button onClick={onLogout}>Sign out</button>
                 ) : (

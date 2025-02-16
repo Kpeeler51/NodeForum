@@ -1,0 +1,26 @@
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #003566;
+    padding: 0 1rem;
+}
+
+.navbar-left {
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+a {
+    margin: 10px 20px;
+    border: none;
+    cursor: pointer;
+    background-color: #003566;
+    color: #dee3ed;
+    font-size: 1rem;
+  }
+
+a:hover {
+    background-color: #06539b;
+  }
