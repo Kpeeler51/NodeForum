@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import PropTypes from 'prop-types';
+import './CreateThread.css';
+import storage from '../../utils/storage';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
@@ -16,9 +18,13 @@ const CreateThread = ({ onClose, categories, onThreadCreated }) => {
     e.preventDefault();
     setError('');
     try {
-      const token = localStorage.getItem('token');
+      const token = storage.getToken();
+      if (!token) {
+        throw new Error('No authentication token found. Please log in again.');
+      }
+
       let categoryId = category;
-  
+
       if (category === 'new' && newCategory.trim()) {
         const categoryResponse = await fetch(`${API_BASE_URL}/api/categories`, {
           method: 'POST',
@@ -28,15 +34,17 @@ const CreateThread = ({ onClose, categories, onThreadCreated }) => {
           },
           body: JSON.stringify({ name: newCategory.trim() }),
         });
-  
+
         if (!categoryResponse.ok) {
+          const categoryErrorData = await categoryResponse.text();
+          console.error('Category creation error response:', categoryErrorData);
           throw new Error('Failed to create or fetch category');
         }
-  
+
         const categoryData = await categoryResponse.json();
         categoryId = categoryData.category._id;
       }
-  
+
       const response = await fetch(`${API_BASE_URL}/api/threads`, {
         method: 'POST',
         headers: {
@@ -46,11 +54,13 @@ const CreateThread = ({ onClose, categories, onThreadCreated }) => {
         body: JSON.stringify({ title, description, category: categoryId }),
       });
       
-      const data = await response.json();
-      
       if (!response.ok) {
-        throw new Error(data.message || 'Failed to create thread');
+        const errorData = await response.text();
+        console.error('Thread creation error response:', errorData);
+        throw new Error('Failed to create thread');
       }
+
+      const data = await response.json();
       
       onClose();
       onThreadCreated();

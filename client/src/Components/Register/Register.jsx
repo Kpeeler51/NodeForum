@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router';
 import PropTypes from 'prop-types';
 import { register, login } from '../../api/auth';
+import storage from '../../utils/storage';
 
 const Register = ({ onLogin, isAuthenticated }) => {
     const [username, setUsername] = useState("");
@@ -26,10 +27,24 @@ const Register = ({ onLogin, isAuthenticated }) => {
         }
     
         try {
-            await register(username, email, password);
+            const registerData = await register(username, email, password);
+            console.log('Register response:', registerData);
+
             const loginData = await login(email, password);
-            onLogin(loginData.token);
-            navigate('/');
+            console.log('Login response:', loginData);
+
+            if (loginData && loginData.token && loginData.userId && loginData.username) {
+                storage.setToken(loginData.token);
+                const userData = {
+                    userId: loginData.userId,
+                    username: loginData.username
+                };
+                storage.setUser(userData);
+                console.log('User data set in storage:', userData);
+
+                onLogin(loginData.token, userData);
+                navigate('/');
+            }
         } catch (err) {
             console.error('Registration error:', err);
             

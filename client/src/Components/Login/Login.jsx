@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router';
 import PropTypes from 'prop-types';
 import { login } from '../../api/auth';
+import storage from '../../utils/storage';
 
 const Login = ({ onLogin, isAuthenticated }) => {
     const [email, setEmail] = useState('');
@@ -21,21 +22,19 @@ const Login = ({ onLogin, isAuthenticated }) => {
             const data = await login(email, password);
             console.log('Login response:', data);
     
-            if (data && data.token) {
-                localStorage.setItem('token', data.token);
-                localStorage.setItem('userInfo', JSON.stringify({
+            if (data && data.token && data.userId && data.username) {
+                storage.setToken(data.token);
+                const userData = {
                     userId: data.userId,
                     username: data.username
-                }));
-                console.log('Token set in localStorage:', data.token);
-                onLogin(data.token, {
-                    userId: data.userId,
-                    username: data.username
-                });
+                };
+                storage.setUser(userData);
+                console.log('User data set in storage:', userData);
+                onLogin(data.token, userData);
                 navigate('/');
             } else {
-                console.error('No token received in login response');
-                setError('Login failed: No token received');
+                console.error('Invalid login response:', data);
+                setError('Login failed: Invalid response from server');
             }
         } catch (err) {
             console.error('Login error:', err);
