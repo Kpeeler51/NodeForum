@@ -45,6 +45,7 @@ const ThreadDetail = () => {
   }, [id]);
 
   const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
     const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
@@ -155,13 +156,13 @@ const ThreadDetail = () => {
         <h2>{thread.title}</h2>
         <p className='thread-description'>{thread.description}</p>
         <div className='thread-items'>
-          <p>Author: {thread.author.username}</p>
-          <p>Category: {thread.category.name || 'Uncategorized'}</p>
+          <p>Author: {thread.author?.username || 'Unknown'}</p>
+          <p>Category: {thread.category?.name || 'Uncategorized'}</p>
           <p>Created: {formatDate(thread.createdAt)}</p>
           {thread.latestReplyDate && (
             <p>Latest Reply: {formatDate(thread.latestReplyDate)}</p>
           )}
-          {currentUser && currentUser.userId === thread.author._id && (
+          {currentUser && currentUser.userId === thread.author?._id && (
             <button className='thread-delete' onClick={handleDeleteThread}>Delete Thread</button>
           )}
         </div>
@@ -175,10 +176,10 @@ const ThreadDetail = () => {
           <div key={reply._id} className="reply-item">
             <p>{reply.content}</p>
             <div className='reply-info'>
-              <p>By: {reply.author.username}</p>
+              <p>By: {reply.author?.username || 'Unknown'}</p>
               <p>Created: {formatDate(reply.createdAt)}</p>
             </div>
-            {currentUser && currentUser.userId === reply.author._id && (
+            {currentUser && currentUser.userId === reply.author?._id && (
               <button className='reply-delete' onClick={() => handleDeleteReply(reply._id)}>Delete Reply</button>
             )}
           </div>
