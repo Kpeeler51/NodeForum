@@ -36,13 +36,13 @@ h1, h2 {
 
 /* Sets color and removes underlines from hyperlinks. */
 a {
-  color: black;
+  color: #dee3ed;
   text-decoration: none
 }
 
 /* Inverts hyperlinks when hovering mouse over. */
 a:hover {
-  color: white
+  color: rgb(74, 74, 236);
 }
 /* Global button customization. */
 button {
@@ -50,10 +50,10 @@ button {
   border: none;
   cursor: pointer;
   background-color: #003566;
-  color: black;
+  color: #dee3ed;
   font-size: 1rem;
 }
 /* Global button hover customization. Buttons will glow when hovered over. */
 button:hover {
-  background-color: #758394;
+  background-color: #06539b;
 }
