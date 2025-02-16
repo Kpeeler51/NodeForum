@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router';
 import PropTypes from 'prop-types';
+import './ThreadList.css';
 
 const ThreadList = ({ selectedCategory }) => {
   const [threads, setThreads] = useState([]);
@@ -39,12 +40,14 @@ const ThreadList = ({ selectedCategory }) => {
           <Link to={`/thread/${thread._id}`}>
             <h3>{thread.title}</h3>
           </Link>
-          <p>Category: {thread.category?.name || 'Uncategorized'}</p>
-          <p>Author: {thread.author?.username || 'Unknown'}</p>
-          <p>Created: {formatDate(thread.createdAt)}</p>
-          {thread.latestReplyDate && (
-            <p>Latest Reply: {formatDate(thread.latestReplyDate)}</p>
-          )}
+          <div className='thread-info'>
+            <p>Category: {thread.category?.name || 'Uncategorized'}</p>
+            <p>Author: {thread.author?.username || 'Unknown'}</p>
+            <p>Created: {formatDate(thread.createdAt)}</p>
+            {thread.latestReplyDate && (
+              <p>Latest Reply: {formatDate(thread.latestReplyDate)}</p>
+            )}
+          </div>
         </div>
       ))}
     </div>
