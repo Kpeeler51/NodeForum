@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import ReplyModal from '../ReplyModal/ReplyModal';
+import storage from '../../utils/storage';
 
 const ThreadDetail = () => {
   const [thread, setThread] = useState(null);
@@ -49,14 +50,20 @@ const ThreadDetail = () => {
 
   useEffect(() => {
     fetchThreadDetails();
-    const userInfo = localStorage.getItem('userInfo');
-    setCurrentUser(userInfo);
+    const user = storage.getUser();
+    if (user) {
+      setCurrentUser(user);
+    }
   }, [fetchThreadDetails]);
 
   const handleReplySubmit = async (e) => {
     e.preventDefault();
+    const token = storage.getToken();
+    if (!token) {
+      setError('You must be logged in to submit a reply.');
+      return;
+    }
     try {
-      const token = localStorage.getItem('token');
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/threads/${id}/replies`, {
         method: 'POST',
         headers: {
@@ -79,9 +86,14 @@ const ThreadDetail = () => {
 
   const handleDeleteThread = async () => {
     if (!window.confirm('Are you sure you want to delete this thread?')) return;
-
+  
+    const token = storage.getToken();
+    if (!token) {
+      setError('You must be logged in to delete a thread.');
+      return;
+    }
+  
     try {
-      const token = localStorage.getItem('token');
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/threads/${id}`, {
         method: 'DELETE',
         headers: {
@@ -100,9 +112,14 @@ const ThreadDetail = () => {
 
   const handleDeleteReply = async (replyId) => {
     if (!window.confirm('Are you sure you want to delete this reply?')) return;
-
+  
+    const token = storage.getToken();
+    if (!token) {
+      setError('You must be logged in to delete a reply.');
+      return;
+    }
+  
     try {
-      const token = localStorage.getItem('token');
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/threads/replies/${replyId}`, {
         method: 'DELETE',
         headers: {

@@ -6,14 +6,16 @@ import Login from './Components/Login/Login';
 import Register from './Components/Register/Register';
 import ThreadDetail from './Components/ThreadDetail/ThreadDetail';
 import CreateThread from './Components/CreateThread/CreateThread';
+import Footer from './Components/Footer/Footer';
+import storage from './utils/storage';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const userInfo = localStorage.getItem('userInfo');
+    const token = storage.getToken();
+    const userInfo = storage.getUser();
     if (token && userInfo) {
       setIsAuthenticated(true);
       setCurrentUser(userInfo);
@@ -21,15 +23,15 @@ const App = () => {
   }, []);
 
   const handleLogin = (token, userInfo) => {
-    localStorage.setItem('token', token);
-    localStorage.setItem('userInfo', JSON.stringify(userInfo));
+    storage.setToken(token);
+    storage.setUser(userInfo);
     setIsAuthenticated(true);
     setCurrentUser(userInfo);
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userInfo');
+    storage.clearToken();
+    storage.clearUser();
     setIsAuthenticated(false);
     setCurrentUser(null);
   };
@@ -57,6 +59,7 @@ const App = () => {
           />
           <Route path="/create-thread" element={<CreateThread />} />
         </Routes>
+        <Footer/>
       </div>
     </Router>
   );

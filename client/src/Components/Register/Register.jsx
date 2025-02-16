@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router';
 import PropTypes from 'prop-types';
 import { register, login } from '../../api/auth';
@@ -9,6 +9,12 @@ const Register = ({ onLogin, isAuthenticated }) => {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate('/');
+        }
+    }, [isAuthenticated, navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -26,11 +32,8 @@ const Register = ({ onLogin, isAuthenticated }) => {
             navigate('/');
         } catch (err) {
             console.error('Registration error:', err);
-            console.log('Error response:', err.response);
             
             if (err.response && err.response.data) {
-                console.log('Error data:', err.response.data);
-                
                 if (err.response.data.field === 'username') {
                     setError('Username already exists. Please choose a different username.');
                 } else if (err.response.data.field === 'email') {
@@ -59,7 +62,6 @@ const Register = ({ onLogin, isAuthenticated }) => {
     };
 
     if (isAuthenticated) {
-        navigate('/');
         return null;
     }
 
