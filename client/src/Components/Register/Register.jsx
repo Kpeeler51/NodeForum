@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router';
 import PropTypes from 'prop-types';
 import { register, login } from '../../api/auth';
 import storage from '../../utils/storage';
+import './register.css'
 
 const Register = ({ onLogin, isAuthenticated }) => {
     const [username, setUsername] = useState("");
@@ -16,6 +17,10 @@ const Register = ({ onLogin, isAuthenticated }) => {
             navigate('/');
         }
     }, [isAuthenticated, navigate]);
+
+    const clearError = () => {
+        setError("");
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -82,8 +87,8 @@ const Register = ({ onLogin, isAuthenticated }) => {
 
     return (
         <main className='register'>
-            <h1 className='registerheader'>Create an account</h1>
-            <form className='registerform' onSubmit={handleSubmit}>
+            <h1 className='register-header'>Create an account</h1>
+            <form className='register-form' onSubmit={handleSubmit}>
                 <label htmlFor='username'>Username</label>
                 <input
                     type='text'
@@ -91,7 +96,10 @@ const Register = ({ onLogin, isAuthenticated }) => {
                     id='username'
                     required
                     value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    onChange={(e) => {
+                        setUsername(e.target.value);
+                        clearError();
+                    }}
                 />
                 <label htmlFor='email'>Email Address</label>
                 <input
@@ -100,7 +108,10 @@ const Register = ({ onLogin, isAuthenticated }) => {
                     id='email'
                     required
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => {
+                        setEmail(e.target.value);
+                        clearError();
+                    }}
                 />
                 <label htmlFor='password'>Password</label>
                 <input
@@ -109,13 +120,16 @@ const Register = ({ onLogin, isAuthenticated }) => {
                     id='password'
                     required
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={(e) => {
+                        setPassword(e.target.value);
+                        clearError();
+                    }}
                 />
                 <p className="password-requirements">
                     Password must be at least 8 characters long and contain at least one uppercase letter.
                 </p>
                 {error && <p className="error">{error}</p>}
-                <button className='registerbutton' type='submit'>Register</button>
+                <button className='register-button' type='submit'>Register</button>
                 <p>
                     Already have an account? <Link to='/'>Sign in</Link>
                 </p>
