@@ -14,8 +14,10 @@ const ReplyModal = ({ isOpen, onClose, newReply, setNewReply, onSubmit }) => {
             placeholder="Write your reply..."
             required
           />
-          <button type="submit">Submit Reply</button>
-          <button type="button" onClick={onClose}>Cancel</button>
+          <div className="button-group">
+            <button type="submit">Create Thread</button>
+            <button type="button" onClick={onClose}>Cancel</button>
+          </div>
         </form>
       </div>
     </div>

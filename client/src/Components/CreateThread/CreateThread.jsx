@@ -72,7 +72,7 @@ const CreateThread = ({ onClose, categories, onThreadCreated }) => {
   };
 
   return (
-    <div className="create-thread-modal">
+    <div className="modal-overlay">
       <div className="modal-content">
         <h2>Create New Thread</h2>
         {error && <p className="error">{error}</p>}
