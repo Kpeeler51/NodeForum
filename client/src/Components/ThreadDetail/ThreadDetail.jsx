@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import ReplyModal from '../ReplyModal/ReplyModal';
 import storage from '../../utils/storage';
+import './ThreadDetail.css';
 
 const ThreadDetail = () => {
   const [thread, setThread] = useState(null);
@@ -149,18 +150,22 @@ const ThreadDetail = () => {
   }
 
   return (
-    <div className="thread-detail">
-      <h2>{thread.title}</h2>
-      <p>{thread.description}</p>
-      <p>Category: {thread.category.name || 'Uncategorized'}</p>
-      <p>Author: {thread.author.username}</p>
-      <p>Created: {formatDate(thread.createdAt)}</p>
-      {thread.latestReplyDate && (
-        <p>Latest Reply: {formatDate(thread.latestReplyDate)}</p>
-      )}
-      {currentUser && currentUser.userId === thread.author._id && (
-        <button onClick={handleDeleteThread}>Delete Thread</button>
-      )}
+    <section className="thread-detail">
+      <div className='thread-info'>
+        <h2>{thread.title}</h2>
+        <p className='thread-description'>{thread.description}</p>
+        <div className='thread-items'>
+          <p>Author: {thread.author.username}</p>
+          <p>Category: {thread.category.name || 'Uncategorized'}</p>
+          <p>Created: {formatDate(thread.createdAt)}</p>
+          {thread.latestReplyDate && (
+            <p>Latest Reply: {formatDate(thread.latestReplyDate)}</p>
+          )}
+          {currentUser && currentUser.userId === thread.author._id && (
+            <button className='thread-delete' onClick={handleDeleteThread}>Delete Thread</button>
+          )}
+        </div>
+      </div>
   
       <h3>Replies</h3>
       {replies.length === 0 ? (
@@ -169,16 +174,18 @@ const ThreadDetail = () => {
         replies.map((reply) => (
           <div key={reply._id} className="reply-item">
             <p>{reply.content}</p>
-            <p>By: {reply.author.username}</p>
-            <p>Created: {formatDate(reply.createdAt)}</p>
+            <div className='reply-info'>
+              <p>By: {reply.author.username}</p>
+              <p>Created: {formatDate(reply.createdAt)}</p>
+            </div>
             {currentUser && currentUser.userId === reply.author._id && (
-              <button onClick={() => handleDeleteReply(reply._id)}>Delete Reply</button>
+              <button className='reply-delete' onClick={() => handleDeleteReply(reply._id)}>Delete Reply</button>
             )}
           </div>
         ))
       )}
   
-      <button onClick={() => setIsReplyModalOpen(true)}>Add Reply</button>
+      <button className='reply-add' onClick={() => setIsReplyModalOpen(true)}>Add Reply</button>
   
       <ReplyModal
         isOpen={isReplyModalOpen}
@@ -187,7 +194,7 @@ const ThreadDetail = () => {
         setNewReply={setNewReply}
         onSubmit={handleReplySubmit}
       />
-    </div>
+    </section>
   );
 };
 
