@@ -29,7 +29,7 @@ const Home = ({ isAuthenticated }) => {
 
   return (
     <main className="home">
-      <h1>Welcome to the Forum</h1>
+      <h1>Welcome to Book Forum!</h1>
       {isAuthenticated && (
         <button onClick={() => setIsCreateThreadModalOpen(true)}>Create New Thread</button>
       )}

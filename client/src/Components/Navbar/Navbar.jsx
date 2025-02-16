@@ -7,7 +7,7 @@ const Nav = ({ isAuthenticated, onLogout }) => {
         <nav className='navbar'>
             <div className='navbar-left'>
                 <Link to="/" className='logo-link'>
-                    <h2 className='logo'>NodeForum</h2>
+                    <h2 className='logo'>BookForum</h2>
                 </Link>
             </div>
             <div className='navbar-right'>
