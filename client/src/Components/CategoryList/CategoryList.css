@@ -1,0 +1,16 @@
+.category-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.category-list button {
+    display: block;  
+    width: 100%;
+    padding: 1rem;
+    text-align: left;
+    margin-bottom: 0.3rem;
+}
+
+.category-list button.active {
+    background-color: #06539b;
+}

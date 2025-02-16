@@ -1,24 +1,27 @@
 import PropTypes from 'prop-types';
+import './CategoryList.css';
 
 const CategoryList = ({ categories, selectedCategory, onSelectCategory }) => {
   return (
     <div className="category-list">
       <h3>Categories</h3>
-      <button 
-        onClick={() => onSelectCategory(null)}
-        className={selectedCategory === null ? 'active' : ''}
-      >
-        All
-      </button>
-      {categories.map((category) => (
-        <button
-          key={category._id}
-          onClick={() => onSelectCategory(category._id)}
-          className={selectedCategory === category._id ? 'active' : ''}
+      <div className="category-buttons">
+        <button 
+          onClick={() => onSelectCategory(null)}
+          className={selectedCategory === null ? 'active' : ''}
         >
-          {category.name}
+          All
         </button>
-      ))}
+        {categories.map((category) => (
+          <button
+            key={category._id}
+            onClick={() => onSelectCategory(category._id)}
+            className={selectedCategory === category._id ? 'active' : ''}
+          >
+            {category.name}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };
