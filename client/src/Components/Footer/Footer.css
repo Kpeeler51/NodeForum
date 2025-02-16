@@ -2,4 +2,5 @@ footer{
     background-color: #003566;
     text-align: center;
     display:flex;
+    border:solid 1px white;
 }
