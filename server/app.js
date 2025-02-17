@@ -6,18 +6,25 @@ import userRoutes from './routes/users.js';
 import threadRoutes from './routes/threads.js';
 import categoryRoutes from './routes/categories.js';
 
+// Load environment variables from .env file
 dotenv.config();
 
+// Create Express application
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Middleware setup
+// Parse URL-encoded bodies
 app.use(express.urlencoded({ extended: true }));
+// Parse JSON bodies
 app.use(express.json());
+// Enable CORS with a specific origin
 app.use(cors({
     origin: 'https://bookforum-zog8.onrender.com',
     credentials: true
   }));
 
+  // Database connection function
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
@@ -28,13 +35,17 @@ const connectDB = async () => {
   }
 };
 
+// API routes
 app.use('/api/users', userRoutes);
 app.use('/api/threads', threadRoutes);
 app.use('/api/categories', categoryRoutes);
 
+// Server startup function
 const startServer = async () => {
     try {
+        // Connect to mongoDB
         await connectDB();
+        // Start the express server.
         await new Promise((resolve, reject) => {
             app.listen(PORT, (err) => {
                 if (err) {
