@@ -35,6 +35,16 @@ Hosted using a free account so may take extra time to start up after periods of 
 * Type cd client and run NPM install, then type npm run dev
 * Type cd .. then cd server and run NPM install, then type npm start
 * Website address and port will be displayed in terminal
+* two .env files will be needed. one in the server folder and one in the client folder
+
+MONGODB_URI=
+
+JWT_SECRET=
+
+VITE_API_URL=
+
+These three variables are required for functionality. For database usage a user will need to use their own mongoDB string.
+VITE_API_URL can be the users own localhost URL.
 
 ## Technologies Used
 
