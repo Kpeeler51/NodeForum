@@ -1,6 +1,7 @@
 import Thread from '../models/thread.js';
 import Reply from '../models/reply.js';
 
+// Create a new thread
 export const createThread = async (req, res) => {
   try {
     const { title, description, category } = req.body;
@@ -17,6 +18,7 @@ export const createThread = async (req, res) => {
   }
 };
 
+// Get all threads optionally filtered by category
 export const getThreads = async (req, res) => {
   try {
     const { category } = req.query;
@@ -24,11 +26,13 @@ export const getThreads = async (req, res) => {
     if (category) {
       query.category = category;
     }
+    // Fetch threads with populated author and category fields
     const threads = await Thread.find(query)
       .populate('author', 'username')
       .populate('category', 'name')
       .lean();
 
+      // Fetch the latest reply for each thread
     const threadsWithLatestReply = await Promise.all(
       threads.map(async (thread) => {
         const latestReply = await Reply.findOne({ thread: thread._id })
@@ -47,6 +51,7 @@ export const getThreads = async (req, res) => {
   }
 };
 
+// Get a single thread by ID, including its replies
 export const getThread = async (req, res) => {
   try {
     const thread = await Thread.findById(req.params.id)
@@ -62,6 +67,7 @@ export const getThread = async (req, res) => {
   }
 };
 
+// Create a new reply for a thread
 export const createReply = async (req, res) => {
   try {
     const { content } = req.body;
@@ -77,6 +83,7 @@ export const createReply = async (req, res) => {
   }
 };
 
+// Delete a thread and all its replies
 export const deleteThread = async (req, res) => {
   try {
     const thread = await Thread.findById(req.params.id);
@@ -94,6 +101,7 @@ export const deleteThread = async (req, res) => {
   }
 };
 
+// Delete a single reply
 export const deleteReply = async (req, res) => {
   try {
     const reply = await Reply.findById(req.params.id);
