@@ -1,7 +1,10 @@
 .thread-item{
     background-color: #003566;
+    margin: 1rem;
 }
 .thread-list-info{
+    margin: 0.5rem;
+    padding: 0.5rem;
     display:flex;
     justify-content: space-between;
 }
