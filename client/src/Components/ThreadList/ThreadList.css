@@ -1,7 +1,7 @@
 .thread-item{
     background-color: #003566;
 }
-.thread-info{
+.thread-list-info{
     display:flex;
     justify-content: space-between;
 }

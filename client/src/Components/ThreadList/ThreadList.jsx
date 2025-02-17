@@ -40,7 +40,7 @@ const ThreadList = ({ selectedCategory }) => {
           <Link to={`/thread/${thread._id}`}>
             <h3>{thread.title}</h3>
           </Link>
-          <div className='thread-info'>
+          <div className='thread-list-info'>
             <p>Category: {thread.category?.name || 'Uncategorized'}</p>
             <p>Author: {thread.author?.username || 'Unknown'}</p>
             <p>Created: {formatDate(thread.createdAt)}</p>
