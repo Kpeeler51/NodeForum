@@ -5,15 +5,20 @@ import CreateThread from '../CreateThread/CreateThread';
 import CategoryList from '../CategoryList/CategoryList';
 import './Home.css';
 
+// Main page of the application. Displays a list of categories and threads.
+// provides functionality to create new threads and select categories.
 const Home = ({ isAuthenticated }) => {
+  // States for opening thread modal and selecting categories.
   const [isCreateThreadModalOpen, setIsCreateThreadModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [categories, setCategories] = useState([]);
 
+  // Fetch categories when the component mounts.
   useEffect(() => {
     fetchCategories();
   }, []);
 
+  // Fetches a list of categories from the API
   const fetchCategories = async () => {
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/categories`);
@@ -30,10 +35,12 @@ const Home = ({ isAuthenticated }) => {
   return (
     <main className="home">
       <h1>Welcome to Book Forum!</h1>
+      {/* Create thread button only rendered for authenticated users. */}
       {isAuthenticated && (
         <button onClick={() => setIsCreateThreadModalOpen(true)}>Create New Thread</button>
       )}
       <div className="home-content">
+        {/* Category List Sidebar displays categories. */}
         <div className="category-list-container">
           <CategoryList 
             categories={categories} 
@@ -41,10 +48,12 @@ const Home = ({ isAuthenticated }) => {
             onSelectCategory={setSelectedCategory} 
           />
         </div>
+        {/* Thread list container displays a list of threads. */}
         <div className="thread-list-container">
           <ThreadList selectedCategory={selectedCategory} />
         </div>
       </div>
+      {/* Renders create thread modal when CreateTreadModalOpen is true */}
       {isCreateThreadModalOpen && (
         <CreateThread 
           onClose={() => setIsCreateThreadModalOpen(false)} 
@@ -56,6 +65,7 @@ const Home = ({ isAuthenticated }) => {
   );
 };
 
+// PropTypes for Home component.
 Home.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
 };
