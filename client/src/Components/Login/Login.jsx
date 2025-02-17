@@ -21,7 +21,6 @@ const Login = ({ onLogin, isAuthenticated }) => {
         e.preventDefault();
         try {
             const data = await login(email, password);
-            console.log('Login response:', data);
     
             if (data && data.token && data.userId && data.username) {
                 storage.setToken(data.token);
@@ -30,11 +29,10 @@ const Login = ({ onLogin, isAuthenticated }) => {
                     username: data.username
                 };
                 storage.setUser(userData);
-                console.log('User data set in storage:', userData);
                 onLogin(data.token, userData);
                 navigate('/');
             } else {
-                console.error('Invalid login response:', data);
+                console.error('Invalid login response:');
                 setError('Login failed: Invalid response from server');
             }
         } catch (err) {
