@@ -5,26 +5,33 @@ import { register, login } from '../../api/auth';
 import storage from '../../utils/storage';
 import './Register.css'
 
+// Register component renders a registration form for users to create an account.
+// Handles user registration and logs them in unpon account creation.
 const Register = ({ onLogin, isAuthenticated }) => {
+    // State management for form inputs and error handling.
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
+    // Redirects to home if user is authenticated.
     useEffect(() => {
         if (isAuthenticated) {
             navigate('/');
         }
     }, [isAuthenticated, navigate]);
 
+    // Clears error message when user starts typing.
     const clearError = () => {
         setError("");
     };
 
+    // Handles form submission for user registration.
     const handleSubmit = async (e) => {
         e.preventDefault();
         
+        // Validate password before submission.
         const passwordError = validatePassword(password);
         if (passwordError) {
             setError(passwordError);
@@ -32,10 +39,13 @@ const Register = ({ onLogin, isAuthenticated }) => {
         }
     
         try {
+            // Attempts to register user based on username, email, and password.
             await register(username, email, password);
+            // If sucessful log the user in.
             const loginData = await login(email, password);
         
             if (loginData && loginData.token && loginData.userId && loginData.username) {
+                // Store authentication data and update app state
                 storage.setToken(loginData.token);
                 const userData = {
                     userId: loginData.userId,
@@ -48,7 +58,7 @@ const Register = ({ onLogin, isAuthenticated }) => {
             }
         } catch (err) {
             console.error('Registration error occurred');
-            
+             // Handle different types of registration errors
             if (err.response && err.response.data) {
                 if (err.response.data.field === 'username') {
                     setError('Username already exists. Please choose a different username.');
@@ -66,7 +76,8 @@ const Register = ({ onLogin, isAuthenticated }) => {
             }
         }
     };
-
+    // Password is validated based on length and uppercase criteria.
+    // 8 characters or more and at least 1 uppercase letter.
     const validatePassword = (password) => {
         if (password.length < 8) {
             return "Password must be at least 8 characters long.";
@@ -85,6 +96,7 @@ const Register = ({ onLogin, isAuthenticated }) => {
         <main className='register'>
             <h1 className='register-header'>Create an account</h1>
             <form className='register-form' onSubmit={handleSubmit}>
+                {/* Username input field */}
                 <label htmlFor='username'>Username</label>
                 <input
                     type='text'
@@ -97,6 +109,7 @@ const Register = ({ onLogin, isAuthenticated }) => {
                         clearError();
                     }}
                 />
+                {/* Email input field */}
                 <label htmlFor='email'>Email Address</label>
                 <input
                     type='email'
@@ -109,6 +122,7 @@ const Register = ({ onLogin, isAuthenticated }) => {
                         clearError();
                     }}
                 />
+                {/* Password input field */}
                 <label htmlFor='password'>Password</label>
                 <input
                     type='password'
@@ -121,11 +135,14 @@ const Register = ({ onLogin, isAuthenticated }) => {
                         clearError();
                     }}
                 />
+                {/* Informs user of password requirements. */}
                 <p className="password-requirements">
                     Password must be at least 8 characters long and contain at least one uppercase letter.
                 </p>
+                {/* Error message display */}
                 {error && <p className="error">{error}</p>}
                 <button className='register-button' type='submit'>Register</button>
+                {/* Link to login page */}
                 <p>
                     Already have an account? <Link to='/'>Sign in</Link>
                 </p>
@@ -134,6 +151,7 @@ const Register = ({ onLogin, isAuthenticated }) => {
     );
 };
 
+// PropTypes validation for Register component
 Register.propTypes = {
     onLogin: PropTypes.func.isRequired,
     isAuthenticated: PropTypes.bool.isRequired
