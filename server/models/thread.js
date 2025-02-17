@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 
+// Define thread schema and model.
+// Threads require a title, descripton, category, and author.
 const threadSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
@@ -8,6 +10,7 @@ const threadSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
+// Creates thread using the defined schema.
 const Thread = mongoose.model('Thread', threadSchema);
 
 export default Thread;
