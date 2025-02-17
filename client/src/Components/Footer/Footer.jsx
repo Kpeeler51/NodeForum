@@ -1,5 +1,5 @@
 import './Footer.css'
-
+// Footer displays copyright info on the bottom of the page
 export default function Footer() {
   return (
     <footer>
