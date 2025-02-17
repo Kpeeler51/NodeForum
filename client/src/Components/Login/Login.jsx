@@ -43,7 +43,7 @@ const Login = ({ onLogin, isAuthenticated }) => {
 
     return (
         <main className='login'>
-            <h1 className='loginheader'>Log into your account</h1>
+            <h1 className='login-header'>Log into your account</h1>
             <form className='loginform' onSubmit={handleSubmit}>
                 <label htmlFor='email'>Email Address</label>
                 <input
