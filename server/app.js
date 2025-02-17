@@ -20,7 +20,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // Enable CORS with a specific origin
 app.use(cors({
-    origin: 'https://bookforum-zog8.onrender.com',
+    origin: [
+      'https://bookforum-zog8.onrender.com',
+      'http://localhost:5173',
+    ],
     credentials: true
   }));
 
