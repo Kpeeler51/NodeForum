@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router';
 import PropTypes from 'prop-types';
 import { register, login } from '../../api/auth';
 import storage from '../../utils/storage';
-import './register.css'
+import './Register.css'
 
 const Register = ({ onLogin, isAuthenticated }) => {
     const [username, setUsername] = useState("");
