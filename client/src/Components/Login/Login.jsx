@@ -5,24 +5,29 @@ import { login } from '../../api/auth';
 import storage from '../../utils/storage';
 import './Login.css'
 
+// Login component renders a login form and handles user authentication.
+// On sucessful login redirects user to the home page. An unsuccessful login displays an error message.
 const Login = ({ onLogin, isAuthenticated }) => {
+    // state management for form inputs
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
-
+// Redirect to home if user is authenticated
     useEffect(() => {
         if (isAuthenticated) {
             navigate('/');
         }
     }, [isAuthenticated, navigate]);
 
+    // handles form submission for user login
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const data = await login(email, password);
     
             if (data && data.token && data.userId && data.username) {
+                // Store authentication data and update app state
                 storage.setToken(data.token);
                 const userData = {
                     userId: data.userId,
@@ -45,6 +50,7 @@ const Login = ({ onLogin, isAuthenticated }) => {
         <main className='login'>
             <h1 className='login-header'>Log into your account</h1>
             <form className='loginform' onSubmit={handleSubmit}>
+                {/* Email input field */}
                 <label htmlFor='email'>Email Address</label>
                 <input
                     type='email'
@@ -54,6 +60,7 @@ const Login = ({ onLogin, isAuthenticated }) => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                 />
+                {/* Password input field */}
                 <label htmlFor='password'>Password</label>
                 <input
                     type='password'
@@ -63,8 +70,10 @@ const Login = ({ onLogin, isAuthenticated }) => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
+                {/* Display error messages. */}
                 {error && <p className="error">{error}</p>}
                 <button className='loginBtn' type="submit">SIGN IN</button>
+                {/* Registration link. */}
                 <p>
                     Don&#39;t have an account? <Link to='/register'>Create one</Link>
                 </p>
@@ -73,6 +82,7 @@ const Login = ({ onLogin, isAuthenticated }) => {
     );
 };
 
+// PropTypes for Login component
 Login.propTypes = {
     onLogin: PropTypes.func.isRequired,
     isAuthenticated: PropTypes.bool.isRequired
