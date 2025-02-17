@@ -3,18 +3,22 @@ import { useNavigate } from 'react-router';
 import PropTypes from 'prop-types';
 import storage from '../../utils/storage';
 
+// Base URL for API requests, fallback to localhost if VITE_API_URL is not set inside of a .env file.
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-
+// CreateThread component renders a modal form for creating a new thread.
+// Allows users to input a title, description, and select a category for a new thread.
 const CreateThread = ({ onClose, categories, onThreadCreated }) => {
+  // State management for form inputs and error handling
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
   const [newCategory, setNewCategory] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
-
+// Handles submission of form for creating a new thread.
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // Throws an error if the user does not have an authentication token.
     setError('');
     try {
       const token = storage.getToken();
@@ -23,7 +27,7 @@ const CreateThread = ({ onClose, categories, onThreadCreated }) => {
       }
 
       let categoryId = category;
-
+       // If a new category is being created, send a POST request to create it
       if (category === 'new' && newCategory.trim()) {
         const categoryResponse = await fetch(`${API_BASE_URL}/api/categories`, {
           method: 'POST',
@@ -43,7 +47,7 @@ const CreateThread = ({ onClose, categories, onThreadCreated }) => {
         const categoryData = await categoryResponse.json();
         categoryId = categoryData.category._id;
       }
-
+ // Sends a POST request to create a new thread with the provided title, description, and category.
       const response = await fetch(`${API_BASE_URL}/api/threads`, {
         method: 'POST',
         headers: {
@@ -60,7 +64,7 @@ const CreateThread = ({ onClose, categories, onThreadCreated }) => {
       }
 
       const data = await response.json();
-      
+      // Close modal, trigger update, and navigate to the new thread
       onClose();
       onThreadCreated();
       navigate(`/thread/${data._id}`);
@@ -71,10 +75,12 @@ const CreateThread = ({ onClose, categories, onThreadCreated }) => {
   };
 
   return (
+    // Modal container.
     <div className="modal-overlay">
       <div className="modal-content">
         <h2>Create New Thread</h2>
         {error && <p className="error">{error}</p>}
+        {/* Handles submission of thread title, description, and sets the category. */}
         <form onSubmit={handleSubmit}>
           <input
             type="text"
@@ -94,6 +100,7 @@ const CreateThread = ({ onClose, categories, onThreadCreated }) => {
             onChange={(e) => setCategory(e.target.value)}
             required
           >
+            {/* The user can either select an already existing category or create a new one. */}
             <option value="">Select a category</option>
             {categories.map((cat) => (
               <option key={cat._id} value={cat._id}>
@@ -120,7 +127,7 @@ const CreateThread = ({ onClose, categories, onThreadCreated }) => {
     </div>
   );
 };
-
+// Props Validation
 CreateThread.propTypes = {
   onClose: PropTypes.func.isRequired,
   categories: PropTypes.array.isRequired,
