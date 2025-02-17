@@ -9,10 +9,14 @@ import CreateThread from './Components/CreateThread/CreateThread';
 import Footer from './Components/Footer/Footer';
 import storage from './utils/storage';
 
+// Main App component that handles routing and authentication state
 const App = () => {
+
+  // State for tracking authentication status and current user
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
 
+  // Check for existing authentication on component mount
   useEffect(() => {
     const token = storage.getToken();
     const userInfo = storage.getUser();
@@ -22,6 +26,7 @@ const App = () => {
     }
   }, []);
 
+  // Handle user login, sets token and user in local storage and updates state
   const handleLogin = (token, userInfo) => {
     storage.setToken(token);
     storage.setUser(userInfo);
@@ -29,6 +34,7 @@ const App = () => {
     setCurrentUser(userInfo);
   };
 
+  // Handle user logout, clears token and user from local storage and updates state
   const handleLogout = () => {
     storage.clearToken();
     storage.clearUser();
@@ -39,10 +45,12 @@ const App = () => {
   return (
     <Router>
       <div>
+        {/* naviation bar with authentication states */}
         <Navbar 
           isAuthenticated={isAuthenticated} 
           onLogout={handleLogout} 
         />
+        {/* Route configuration. "/" leads back to the home page. */}
         <Routes>
           <Route path="/" element={<Home isAuthenticated={isAuthenticated} />} />
           <Route 
@@ -59,6 +67,7 @@ const App = () => {
           />
           <Route path="/create-thread" element={<CreateThread />} />
         </Routes>
+        {/* Footer component */}
         <Footer/>
       </div>
     </Router>
