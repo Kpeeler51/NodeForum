@@ -23,6 +23,7 @@ Source code hosted at <https://github.com/Kpeeler51/NodeForum>
 
 Website hosted at <https://bookforum-zog8.onrender.com>
 Hosted using a free account so may take extra time to start up after periods of inactivity.
+Serverside may take considerable time to start up, may require multiple refreshes of the clientside.
 
 * Enter homepage and click register or login.
 * Enter user info and click login or register.
