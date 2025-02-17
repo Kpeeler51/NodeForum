@@ -20,6 +20,7 @@ const App = () => {
   useEffect(() => {
     const token = storage.getToken();
     const userInfo = storage.getUser();
+    
     if (token && userInfo) {
       setIsAuthenticated(true);
       setCurrentUser(userInfo);
@@ -48,7 +49,8 @@ const App = () => {
         {/* naviation bar with authentication states */}
         <Navbar 
           isAuthenticated={isAuthenticated} 
-          onLogout={handleLogout} 
+          onLogout={handleLogout}
+          currentUser={currentUser}
         />
         {/* Route configuration. "/" leads back to the home page. */}
         <Routes>

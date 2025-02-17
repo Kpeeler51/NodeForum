@@ -4,7 +4,7 @@ import './Navbar.css';
 
 // Navbar component displays links to home, login, and register pages.
 // If user is authenticated, it displays a sign out button
-const Navbar = ({ isAuthenticated, onLogout }) => {
+const Navbar = ({ isAuthenticated, onLogout, currentUser }) => {
     return (
         <nav className='navbar'>
             {/* Left side of navbar containing logo. */}
@@ -22,7 +22,10 @@ const Navbar = ({ isAuthenticated, onLogout }) => {
             {/* If authenticated displays Sign out */}
             {/* If not authenticated display Sign in and Register */}
                 {isAuthenticated ? (
-                    <button onClick={onLogout}>Sign out</button>
+                    <>
+                        <span className="welcome-message">Welcome, {currentUser.username}!</span>
+                        <button onClick={onLogout}>Sign out</button>
+                    </>
                 ) : (
                     <>
                         <Link to="/login">
@@ -41,7 +44,8 @@ const Navbar = ({ isAuthenticated, onLogout }) => {
 // PropTypes for Navbar Component
 Navbar.propTypes = {
     isAuthenticated: PropTypes.bool.isRequired,
-    onLogout: PropTypes.func.isRequired
+    onLogout: PropTypes.func.isRequired,
+    currentUser: PropTypes.string
 };
 
 export default Navbar;
