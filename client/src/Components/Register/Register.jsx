@@ -32,12 +32,9 @@ const Register = ({ onLogin, isAuthenticated }) => {
         }
     
         try {
-            const registerData = await register(username, email, password);
-            console.log('Register response:', registerData);
-
+            await register(username, email, password);
             const loginData = await login(email, password);
-            console.log('Login response:', loginData);
-
+        
             if (loginData && loginData.token && loginData.userId && loginData.username) {
                 storage.setToken(loginData.token);
                 const userData = {
@@ -45,13 +42,12 @@ const Register = ({ onLogin, isAuthenticated }) => {
                     username: loginData.username
                 };
                 storage.setUser(userData);
-                console.log('User data set in storage:', userData);
-
+        
                 onLogin(loginData.token, userData);
                 navigate('/');
             }
         } catch (err) {
-            console.error('Registration error:', err);
+            console.error('Registration error occurred');
             
             if (err.response && err.response.data) {
                 if (err.response.data.field === 'username') {
