@@ -15,7 +15,7 @@ const ReplyModal = ({ isOpen, onClose, newReply, setNewReply, onSubmit }) => {
             required
           />
           <div className="button-group">
-            <button type="submit">Create Thread</button>
+            <button type="submit">Submit Reply</button>
             <button type="button" onClick={onClose}>Cancel</button>
           </div>
         </form>
