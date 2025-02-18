@@ -1,0 +1,5 @@
+As a user I want to be able to ask post on a public forum so that I can discuss and recieve information on a given topic.
+
+As a user I want to be able reply to threads so that I can share knowledge and answer questions of topics I am knowledgable of
+
+As an administrator I want a user authentication system so that I can keep track of users and avoid spam
